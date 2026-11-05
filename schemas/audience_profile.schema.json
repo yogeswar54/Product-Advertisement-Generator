@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "audience_profile.schema.json",
+  "title": "Audience Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tone", "vocabulary_level", "slang_tolerance", "motivations", "objections", "emotional_triggers", "best_platforms", "preferred_content_formats", "words_styles_to_avoid"],
+  "properties": {
+    "tone": {"type": "string", "minLength": 1, "maxLength": 150},
+    "vocabulary_level": {"type": "string", "minLength": 1, "maxLength": 150},
+    "slang_tolerance": {"type": "string", "minLength": 1, "maxLength": 150},
+    "motivations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 150}},
+    "objections": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 150}},
+    "emotional_triggers": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 150}},
+    "best_platforms": {"type": "array", "minItems": 1, "items": {"enum": ["instagram", "linkedin", "x", "facebook", "whatsapp"]}},
+    "preferred_content_formats": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 150}},
+    "words_styles_to_avoid": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "maxLength": 150}}
+  }
+}

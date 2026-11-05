@@ -1,0 +1,9 @@
+{
+  "styles": ["warm", "energetic", "professional", "calm"],
+  "paces": ["slow", "normal", "fast"],
+  "pace_multiplier": {"slow": 0.85, "normal": 1.0, "fast": 1.15},
+  "base_words_per_second": 2.5,
+  "assembly_resolution": {"width": 640, "height": 360},
+  "languages": ["en-US"],
+  "disclosure_note": "Synthetic voice: disclose AI-generated narration where required by law or policy. Voice cloning of real people is out of scope."
+}

@@ -1,0 +1,11 @@
+{
+  "tone": "Friendly, energetic, direct",
+  "vocabulary_level": "Conversational, plain",
+  "slang_tolerance": "Light; use current terms only when natural",
+  "motivations": ["Affordability", "convenience", "belonging", "personal expression"],
+  "objections": ["Perceived high price", "unclear usefulness", "distrust of polished claims"],
+  "emotional_triggers": ["self-expression", "peer approval", "simple rewards"],
+  "best_platforms": ["instagram", "x", "whatsapp"],
+  "preferred_content_formats": ["short video", "memes with restrained humor", "carousels"],
+  "words_styles_to_avoid": ["condescension", "forced slang", "corporate jargon"]
+}

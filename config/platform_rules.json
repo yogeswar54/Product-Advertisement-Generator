@@ -1,0 +1,7 @@
+{
+  "instagram": {"max_characters": 2200, "recommended_length": 125, "hashtag_count": {"min": 3, "max": 8}, "emoji_tolerance": "moderate", "link_handling": "Place a link in the profile or bio and keep the post text short.", "tone_notes": "Visual, concise, and audience-specific."},
+  "linkedin": {"max_characters": 1500, "recommended_length": 700, "hashtag_count": {"min": 1, "max": 5}, "emoji_tolerance": "low", "link_handling": "One link may be included in the post or first comment.", "tone_notes": "Professional, value-driven, and credible."},
+  "x": {"max_characters": 280, "recommended_length": 240, "hashtag_count": {"min": 0, "max": 2}, "emoji_tolerance": "moderate", "link_handling": "Account for link length according to the current platform configuration.", "tone_notes": "Direct, concise, and conversational."},
+  "facebook": {"max_characters": 1000, "recommended_length": 400, "hashtag_count": {"min": 0, "max": 5}, "emoji_tolerance": "moderate", "link_handling": "A link may be embedded with a concise description.", "tone_notes": "Community-oriented, warm, and easy to read."},
+  "whatsapp": {"max_characters": 1600, "recommended_length": 180, "hashtag_count": {"min": 0, "max": 1}, "emoji_tolerance": "high", "link_handling": "Include one clear link only when necessary.", "tone_notes": "Short, personal, and action-oriented."}
+}

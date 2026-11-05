@@ -1,0 +1,7 @@
+{
+  "negative_prompt":"distorted hands, extra fingers, extra limbs, deformed products, blurry text, watermarks, logos, trademarks, duplicate objects, low resolution",
+  "blocked_real_person_terms":["celebrity","real person","photograph of a named person","public figure"],
+  "blocked_brand_terms":["nike","adidas","apple logo","coca-cola","pepsi","sponsored brand logo"],
+  "blocked_artist_terms":["in the style of","artist style","signature artist look"],
+  "blocked_claim_terms":["medical cure","clinically proven","guaranteed result","award badge","before and after"]
+}

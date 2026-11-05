@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","title":"Campaign Brief","type":"object","additionalProperties":false,
+  "required":["core_message","tone","emotional_hook","key_benefits","audience_profile_reference","dos_and_donts","prompt_version"],
+  "properties":{"core_message":{"type":"string","minLength":1,"maxLength":300},"tone":{"type":"string","minLength":1,"maxLength":150},"emotional_hook":{"type":"string","minLength":1,"maxLength":300},"key_benefits":{"type":"array","minItems":3,"maxItems":5,"items":{"type":"string","minLength":1,"maxLength":150}},"audience_profile_reference":{"type":"string","minLength":1,"maxLength":100},"dos_and_donts":{"type":"object","additionalProperties":false,"required":["dos","donts"],"properties":{"dos":{"type":"array","minItems":1,"items":{"type":"string"}},"donts":{"type":"array","minItems":1,"items":{"type":"string"}}}},"prompt_version":{"type":"string","pattern":"^brief_v[0-9]+$"}}
+}

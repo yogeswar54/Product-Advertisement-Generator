@@ -1,0 +1,7 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","title":"Video Output","type":"object","additionalProperties":false,"required":["15","30","60","prompt_version"],
+  "properties":{
+    "15":{"$ref":"#/definitions/script"},"30":{"$ref":"#/definitions/script"},"60":{"$ref":"#/definitions/script"},"prompt_version":{"type":"string","pattern":"^video_script_v[0-9]+$"}
+  },
+  "definitions":{"script":{"type":"object","additionalProperties":false,"required":["title","concept","hook","scenes","narration","cta","estimated_spoken_seconds","pronunciation_hints","prompt_version"],"properties":{"title":{"type":"string"},"concept":{"type":"string"},"hook":{"type":"string"},"scenes":{"type":"array","minItems":1,"items":{"type":"object","additionalProperties":false,"required":["scene_number","start","end","visual","narration","on_screen_text","music_mood","sound_effect"],"properties":{"scene_number":{"type":"integer","minimum":1},"start":{"type":"number","minimum":0},"end":{"type":"number","minimum":0},"visual":{"type":"string"},"narration":{"type":"string"},"on_screen_text":{"type":"string"},"music_mood":{"type":"string"},"sound_effect":{"type":"string"}}}},"narration":{"type":"string"},"cta":{"type":"string"},"estimated_spoken_seconds":{"type":"number","minimum":0},"pronunciation_hints":{"type":"object","additionalProperties":{"type":"string"}},"prompt_version":{"type":"string","pattern":"^video_script_v[0-9]+$"}}}}
+}

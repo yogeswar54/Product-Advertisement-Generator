@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "input.schema.json",
+  "title": "Campaign Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["product_name", "category", "key_features", "usp", "brand_voice", "target_audience", "campaign_goal", "platforms", "language"],
+  "properties": {
+    "product_name": {"type": "string", "minLength": 1, "maxLength": 100},
+    "category": {"type": "string", "minLength": 1, "maxLength": 100},
+    "key_features": {"type": "array", "minItems": 1, "maxItems": 12, "items": {"type": "string", "minLength": 1, "maxLength": 120}, "uniqueItems": true},
+    "price": {"type": "number", "minimum": 0},
+    "usp": {"type": "string", "minLength": 1, "maxLength": 300},
+    "brand_name": {"type": "string", "maxLength": 100},
+    "brand_voice": {"type": "string", "minLength": 1, "maxLength": 100},
+    "target_audience": {"type": "string", "minLength": 1, "maxLength": 100},
+    "campaign_goal": {"type": "string", "minLength": 1, "maxLength": 150},
+    "platforms": {"type": "array", "minItems": 1, "maxItems": 6, "uniqueItems": true, "items": {"enum": ["instagram", "linkedin", "x", "facebook", "whatsapp"]}},
+    "language": {"type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"},
+    "product_image": {"anyOf": [{"type": "string", "maxLength": 2048}, {"type": "null"}]},
+    "competitor_info": {"type": "string", "maxLength": 1500}
+  }
+}

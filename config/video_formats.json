@@ -1,0 +1,5 @@
+{
+  "15": {"duration_seconds": 15, "speaking_pace_words_per_second": 2.5, "min_words": 30, "max_words": 45, "scene_count": 3, "hook_window_seconds": 3, "cta_window_seconds": 3, "platforms": ["instagram", "x", "whatsapp"]},
+  "30": {"duration_seconds": 30, "speaking_pace_words_per_second": 2.5, "min_words": 65, "max_words": 85, "scene_count": 4, "hook_window_seconds": 3, "cta_window_seconds": 5, "platforms": ["instagram", "facebook", "linkedin"]},
+  "60": {"duration_seconds": 60, "speaking_pace_words_per_second": 2.5, "min_words": 130, "max_words": 160, "scene_count": 6, "hook_window_seconds": 3, "cta_window_seconds": 8, "platforms": ["instagram", "facebook", "linkedin", "whatsapp"]}
+}

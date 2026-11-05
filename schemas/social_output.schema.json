@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "social_output.schema.json",
+  "title": "Social Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["instagram", "linkedin", "x", "facebook", "whatsapp", "calendar", "prompt_version"],
+  "properties": {
+    "instagram": {"$ref": "#/definitions/instagram"}, "linkedin":{"$ref":"#/definitions/linkedin"}, "x":{"$ref":"#/definitions/x"}, "facebook":{"$ref":"#/definitions/facebook"}, "whatsapp":{"$ref":"#/definitions/whatsapp"},
+    "calendar":{"type":"array","minItems":7,"maxItems":7,"items":{"type":"object","additionalProperties":false,"required":["day","platform","post_type","topic","post_reference","suggested_time_slot"],"properties":{"day":{"type":"integer","minimum":1,"maximum":7},"platform":{"enum":["instagram","linkedin","x","facebook","whatsapp"]},"post_type":{"enum":["teaser","feature highlight","benefit story","social proof placeholder","offer or CTA","user-engagement question","recap"]},"topic":{"type":"string","minLength":1},"post_reference":{"type":"string","minLength":1},"suggested_time_slot":{"type":"string","minLength":1}}}},
+    "prompt_version":{"type":"string","pattern":"^social_v[0-9]+$"}
+  },
+  "definitions": {
+    "instagram":{"type":["object","null"],"required":["caption","hashtags","carousel_slide_ideas","reel_hook"],"properties":{"caption":{"type":"string"},"hashtags":{"type":"array","items":{"type":"string"}},"carousel_slide_ideas":{"type":"array","minItems":3,"items":{"type":"string"}},"reel_hook":{"type":"string"}},"additionalProperties":false},
+    "linkedin":{"type":["object","null"],"required":["post","hashtags"],"properties":{"post":{"type":"string"},"hashtags":{"type":"array","items":{"type":"string"}}},"additionalProperties":false},
+    "x":{"type":["object","null"],"required":["post","thread"],"properties":{"post":{"type":"string"},"thread":{"type":"array","items":{"type":"string"}}},"additionalProperties":false},
+    "facebook":{"type":["object","null"],"required":["post","question_or_poll"],"properties":{"post":{"type":"string"},"question_or_poll":{"type":"string"}},"additionalProperties":false},
+    "whatsapp":{"type":["object","null"],"required":["message"],"properties":{"message":{"type":"string"}},"additionalProperties":false}
+  }
+}

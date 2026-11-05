@@ -1,0 +1,6 @@
+{
+  "poster": {"name":"Poster","aspect_ratio":"2:3","width":1080,"height":1620,"safe_zone_notes":"Keep key content at least 5% from all edges.","text_guidance":"Use one short headline and one short CTA; add final text in a design tool.","platforms":["instagram","facebook"]},
+  "banner": {"name":"Banner","aspect_ratio":"3:1","width":1500,"height":500,"safe_zone_notes":"Reserve a centered safe area for the headline.","text_guidance":"Use only five to eight headline words and a short CTA.","platforms":["linkedin","facebook"]},
+  "story": {"name":"Story (vertical)","aspect_ratio":"9:16","width":1080,"height":1920,"safe_zone_notes":"Avoid top and bottom interface zones; keep text centered.","text_guidance":"Use one headline line and a short CTA in a design overlay.","platforms":["instagram","whatsapp","facebook"]},
+  "square_social_post": {"name":"Square social post","aspect_ratio":"1:1","width":1080,"height":1080,"safe_zone_notes":"Keep the product and text within a centered safe area.","text_guidance":"Use a short headline and short CTA; avoid dense copy.","platforms":["instagram","linkedin","x","facebook"]}
+}

@@ -1,0 +1,6 @@
+{
+  "rules_version":"quality-rules-v1",
+  "starting_version_note":"Starting versions only; require expert review and expansion.",
+  "absolute_claim_words":["best","#1","guaranteed","clinically proven","100% effective","number one","risk-free returns"],
+  "risky_claim_words":["cures","treats","prevents disease","miracle","clinically proven","doctor recommended"],
+  "restricted_categories":{"health":{"terms":["supplement","health","medical","cure","treatment"],"rule":"Do not claim diagnosis, prevention, treatment, cure, or health outcomes without evidence and human review.","disclaimer":"Health advertising content requires qualified evidence review"},":["},":["review disclaimer to humans"],"Alcohol":{"terms":{"terms":[health review.", 

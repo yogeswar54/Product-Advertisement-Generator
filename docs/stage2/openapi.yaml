@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: AI-Based Product Advertisement Generator - Stage 3
+  version: 0.3.0
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        '200': {description: Service is healthy}
+  /personas:
+    get:
+      operationId: listPersonas
+      responses:
+        '200': {description: Persona list}
+  /personas/{persona_id}:
+    get:
+      operationId: getPersona
+      parameters:
+        - in: path
+          name: persona_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Persona}
+        '404': {description: Persona not found}
+  /inputs/validate:
+    post:
+      operationId: validateInput
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: ../../schemas/input.schema.json}
+      responses:
+        '200': {description: Validated input, warnings, and flags}
+        '422': {description: Validation error}
+  /audiences/profile:
+    post:
+      operationId: profileAudience
+      responses:
+        '200': {description: Audience profile}
+        '404': {description: Persona not found}
+        '422': {description: Validation or bias guard error}
+  /campaigns/brief:
+    post:
+      operationId: createCampaignBrief
+      responses:
+        '200': {description: Campaign brief}
+        '502': {description: Invalid hosted response}
+    put:
+      operationId: editCampaignBrief
+      responses:
+        '200': {description: Edited campaign brief}
+  /campaigns/generate:
+    post:
+      operationId: generateCampaignText
+      responses:
+        '200': {description: Description and promotional package with partial module status}
+        '429': {description: Provider rate limit}
+        '503': {description: Provider timeout or unavailable}
+  /campaigns/{section}/regenerate:
+    post:
+      operationId: regenerateCampaignSection
+      parameters:
+        - in: path
+          name: section
+          required: true
+          schema: {type: string, enum: [description, promo]}
+      responses:
+        '200': {description: Regenerated section}
+        '404': {description: Section not found}
+  /campaigns/social/regenerate:
+    post:
+      operationId: regenerateSocialContent
+      parameters:
+        - in: query
+          name: platform
+          required: false
+          schema: {type: string, enum: [instagram, linkedin, x, facebook, whatsapp]}
+      responses:
+        '200': {description: Regenerated social content or single platform}
+        '422': {description: Unsupported platform}
+  /campaigns/social/calendar/regenerate:
+    post:
+      operationId: regenerateSocialCalendar
+      responses:
+        '200': {description: Seven-day social calendar}
+  /campaigns/visuals/regenerate:
+    post:
+      operationId: regenerateVisualConcepts
+      parameters:
+        - in: query
+          name: concept
+          required: false
+          schema: {type: integer, minimum: 0, maximum: 2}
+      responses:
+        '200': {description: Visual concepts or one concept}
+  /campaigns/visuals/images:
+    post:
+      operationId: generateVisualImage
+      responses:
+        '200': {description: User-triggered generated image asset}
+        '429': {description: Image campaign limit reached}
+  /assets/{asset_id}:
+    get:
+      operationId: serveAsset
+      parameters:
+        - in: path
+          name: asset_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: PNG asset}
+        '404': {description: Asset not found}
+  /campaigns/video/regenerate:
+    post:
+      operationId: regenerateVideoScripts
+      parameters:
+        - in: query
+          name: duration
+          required: false
+          schema: {type: integer, enum: [15, 30, 60]}
+      responses:
+        '200': {description: Video scripts or one duration}
+        '422': {description: Invalid duration}
+  /campaigns/video/voiceover:
+    post:
+      operationId: generateVideoVoiceover
+      responses:
+        '200': {description: User-triggered placeholder or hosted audio asset}
+        '429': {description: Audio campaign limit reached}
+  /campaigns/video/assemble:
+    post:
+      operationId: assembleDraftVideo
+      responses:
+        '202': {description: Background video assembly job started}
+        '429': {description: Video build limit reached}
+  /jobs/{job_id}:
+    get:
+      operationId: getVideoAssemblyJob
+      parameters:
+        - in: path
+          name: job_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Job status and progress}
+        '404': {description: Job not found}
+  /campaigns/{campaign_id}/assets:
+    get:
+      operationId: listCampaignAssets
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Campaign asset metadata}

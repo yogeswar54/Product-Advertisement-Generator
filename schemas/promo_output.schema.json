@@ -1,0 +1,5 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema","title":"Promo Output","type":"object","additionalProperties":false,
+  "required":["headlines","taglines","ad_copy_variants","ctas","ab_variants","prompt_version"],
+  "properties":{"headlines":{"type":"array","minItems":5,"maxItems":5,"items":{"type":"string","minLength":1,"maxLength":60}},"taglines":{"type":"array","minItems":5,"maxItems":5,"items":{"type":"string","minLength":1,"maxLength":80}},"ad_copy_variants":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"object","additionalProperties":false,"required":["style","copy"],"properties":{"style":{"enum":["banner","email","search-ad"]},"copy":{"type":"string","minLength":1}}}},"ctas":{"type":"array","minItems":5,"maxItems":10,"items":{"type":"string","minLength":1,"maxLength":30}},"ab_variants":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"object","additionalProperties":false,"required":["angle","id","copy"],"properties":{"angle":{"enum":["urgency","trust","fun"]},"id":{"type":"string","enum":["A","B","C"]},"copy":{"type":"string","minLength":1}}}},"prompt_version":{"type":"string","pattern":"^promo_v[0-9]+$"}}
+}
