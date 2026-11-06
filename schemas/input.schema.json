@@ -16,8 +16,28 @@
     "target_audience": {"type": "string", "minLength": 1, "maxLength": 100},
     "campaign_goal": {"type": "string", "minLength": 1, "maxLength": 150},
     "platforms": {"type": "array", "minItems": 1, "maxItems": 6, "uniqueItems": true, "items": {"enum": ["instagram", "linkedin", "x", "facebook", "whatsapp"]}},
-    "language": {"type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$"},
+    "language": {"type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$", "description": "Extensible language tag; Hindi (hi) generation requires ENHANCE_HINDI=on."},
     "product_image": {"anyOf": [{"type": "string", "maxLength": 2048}, {"type": "null"}]},
-    "competitor_info": {"type": "string", "maxLength": 1500}
+    "competitor_info": {"type": "string", "maxLength": 1500},
+    "brand_kit": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "primary_color", "secondary_color", "font", "font_licensing_note", "rights_confirmed"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1, "maxLength": 100},
+            "primary_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "secondary_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "logo_asset_id": {"type": ["string", "null"], "pattern": "^[0-9a-f]{32}$"},
+            "font": {"type": "string", "minLength": 1, "maxLength": 100},
+            "font_licensing_note": {"type": "string", "minLength": 1, "maxLength": 300},
+            "rights_confirmed": {"const": true, "description": "User confirmation only; does not verify rights."}
+          }
+        }
+      ],
+      "description": "Campaign-scoped brand kit; requires ENHANCE_BRAND_KIT=on."
+    }
   }
 }

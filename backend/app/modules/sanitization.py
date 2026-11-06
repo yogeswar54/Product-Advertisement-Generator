@@ -6,9 +6,13 @@ import unicodedata
 
 SCRIPT_PATTERN = re.compile(r"<(?:script|style)[^>]*>.*?</(?:script|style)>|<[^>]+>", re.IGNORECASE | re.DOTALL)
 INJECTION_PATTERNS = (
-    r"ignore\s+(?:all\s+)?(?:previous|prior|system)\s+(?:instructions?|prompts?)",
-    r"disregard\s+(?:all\s+)?(?:previous|prior|system)",
-    r"reveal\s+(?:the\s+)?(?:system|hidden)\s+(?:prompt|instructions?)",
+    r"\b(?:ignore|disregard|override|forget|bypass)\b.{0,60}\b(?:instructions?|prompts?|rules?|polic(?:y|ies)|system|safety|checks?|guardrails?)\b",
+    r"\b(?:reveal|print|show|repeat|output|expose)\b.{0,60}\b(?:system prompt|hidden instructions?|api key|secret|developer message)\b",
+    r"\b(?:system prompt|hidden instructions?|developer message)\b",
+    r"\b(?:act|role[- ]?play|pretend|behave)\s+(?:as|like)\s+(?:(?:an?|my|your|the)\s+)?(?:admin|developer|system|unrestricted|root|assistant)\b",
+    r"\byou are now\s+(?:an?\s+)?(?:admin|developer|unrestricted|system)\b",
+    r"\bfollow these new instructions\b",
+    r"\b(?:jailbreak|prompt injection)\b",
     r"jailbreak",
 )
 RESTRICTED_TERMS = {
@@ -25,6 +29,7 @@ def normalize_text(value: str, limit: int) -> str:
     value = unicodedata.normalize("NFKC", value)
     value = SCRIPT_PATTERN.sub(" ", value)
     value = html.unescape(value)
+    value = re.sub(r"\bjavascript\s*:", "blocked:", value, flags=re.IGNORECASE)
     value = re.sub(r"\s+", " ", value).strip()
     return value[:limit]
 

@@ -1,17 +1,18 @@
 [
   {
-    "id": "4684553b44fa400a8dc8660a573b751e",
-    "campaign_id": "a30936398b94",
+    "id": "69b9f187e89147e192a7de501355bc36",
+    "campaign_id": "b510728fc1f9",
     "concept": "Campus Morning",
     "format": "square_social_post",
     "prompt": "Reusable bottle on campus desk, minimal product composition, soft daylight, 1:1 aspect ratio, blue and green color mood.",
     "provider": "mock",
     "model": "mock-image-v1",
-    "created_time": "2026-11-05T16:59:32.874240+00:00",
-    "path": "D:\\Agentic AI\\storage\\assets\\4684553b44fa400a8dc8660a573b751e.png"
+    "asset_role": "generated",
+    "created_time": "2026-11-06T14:58:43.283469+00:00",
+    "path": "D:\\Agentic AI\\storage\\assets\\69b9f187e89147e192a7de501355bc36.png"
   },
   {
-    "id": "3e8d54690e2e4aebb9bdfa13838c982c",
+    "id": "9c3b107ef4c04eb388df92fb7abb3c37",
     "asset_type": "audio",
     "campaign_id": "campusflow-bottle",
     "duration": 8.8,
@@ -19,7 +20,7 @@
     "pace": "normal",
     "provider": "mock",
     "model": "mock-tts-v1",
-    "created_time": "2026-11-05T16:59:33.346113+00:00",
-    "path": "D:\\Agentic AI\\storage\\assets\\3e8d54690e2e4aebb9bdfa13838c982c.wav"
+    "created_time": "2026-11-06T14:58:43.647650+00:00",
+    "path": "D:\\Agentic AI\\storage\\assets\\9c3b107ef4c04eb388df92fb7abb3c37.wav"
   }
 ]

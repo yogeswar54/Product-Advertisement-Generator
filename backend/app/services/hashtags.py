@@ -13,6 +13,8 @@ def camel_case(value: str) -> str:
 
 
 def clean_hashtags(values: list[str], minimum: int, maximum: int) -> list[str]:
+    if minimum < 0 or maximum < 0 or minimum > maximum:
+        raise ValueError("Hashtag range is invalid")
     cleaned: list[str] = []
     seen: set[str] = set()
     for value in values:

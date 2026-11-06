@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "campaign_package.schema.json",
+  "title": "Campaign Package",
+  "type": "object",
+  "required": [
+    "package_id", "campaign_id", "created_time", "updated_time",
+    "product_input", "audience_summary", "campaign_brief",
+    "descriptions", "promo", "social", "visuals", "video",
+    "quality_summary", "approval", "disclosure"
+  ],
+  "properties": {
+    "package_id": {"type": "string"},
+    "campaign_id": {"type": "string"},
+    "created_time": {"type": "string"},
+    "updated_time": {"type": "string"},
+    "product_input": {"type": "object"},
+    "audience_summary": {"type": "object"},
+    "campaign_brief": {"type": "object"},
+    "descriptions": {"type": "object"},
+    "promo": {"type": "object"},
+    "social": {"type": "object"},
+    "visuals": {"type": "object"},
+    "video": {"type": "object"},
+    "quality_summary": {"type": "object"},
+    "approval": {"type": "object"},
+    "prompt_versions": {"type": "array", "items": {"type": "string"}},
+    "rules_version": {"type": ["string", "null"]},
+    "model_names": {"type": "array", "items": {"type": "string"}},
+    "disclosure": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -12,7 +12,9 @@ class MockProvider(LLMProvider):
 
     def generate_json(self, system: str, user: str, schema: dict[str, Any], temperature: float, max_tokens: int) -> ProviderResult:
         title = schema.get("title", "")
-        if title == "Video Output":
+        if "Judge" in title or "judge" in user.lower():
+            data = {"score": 90, "pass": True, "reasons": ["Mock deterministic judge found no material issue."], "offending_text": []}
+        elif title == "Video Output":
             example = json.loads((__import__('pathlib').Path(__file__).resolve().parents[3] / "schemas/examples/video_output.example.json").read_text(encoding="utf-8"))
             data = example
         elif title == "Visual Output":

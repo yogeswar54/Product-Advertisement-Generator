@@ -17,12 +17,17 @@ from app.services.social_checks import product_facts, run_social_checks
 from app.providers.base import LLMProvider
 from app.services.cache import cache_key, get_cached, set_cached
 from app.services.lightweight_checks import run_lightweight_checks
+from app.services.language_support import is_hindi
+from app.services.quality import run_quality_check
 
 
 def generate_text_package(provider: LLMProvider, product: CampaignInput, audience: AudienceProfile, brief: CampaignBrief) -> dict[str, Any]:
     model_name = getattr(provider, "model", "mock-v1")
     selected_platforms = list(product.platforms)
-    key = cache_key(product.model_dump(), audience.model_dump(by_alias=True) | {"selected_platforms": selected_platforms}, "brief_v1:description_v1:promo_v1:social_v1:visual_concepts_v1:video_script_v1", model_name)
+    prompt_versions = "brief_v1:description_v1:promo_v1:social_v1:visual_concepts_v1:video_script_v1"
+    if is_hindi(product.language):
+        prompt_versions += ":language_policy_hi_v1"
+    key = cache_key(product.model_dump(), audience.model_dump(by_alias=True) | {"selected_platforms": selected_platforms}, prompt_versions, model_name)
     cached = get_cached(key)
     if cached is not None:
         cached = dict(cached)
@@ -70,10 +75,15 @@ def generate_text_package(provider: LLMProvider, product: CampaignInput, audienc
         warnings.extend(run_social_checks(product, social_output, selected_platforms))
     visual_output = modules["visual"].get("output")
     if visual_output:
-        warnings.extend(run_visual_checks(visual_output, product_facts(product)))
+        warnings.extend(run_visual_checks(visual_output, product_facts(product), product.brand_kit))
     video_output = modules["video"].get("output")
     if video_output:
         warnings.extend(run_video_checks(product, video_output))
     output = {"modules":modules, "warnings":[warning.model_dump() for warning in warnings], "estimated_tokens_used":1450, "provider":"mock" if provider.__class__.__name__ == "MockProvider" else "hosted", "cache_hit":False}
+    try:
+        quality = run_quality_check(product.model_dump(), output["modules"], product.product_name)
+        output["quality"] = quality.model_dump()
+    except Exception as exc:
+        output["quality_error"] = f"quality check not completed: {exc}"
     set_cached(key, output)
     return output

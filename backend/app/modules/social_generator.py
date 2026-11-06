@@ -11,6 +11,7 @@ from app.models.stage5 import SocialOutput
 from app.providers.base import LLMProvider
 from app.services.hashtags import build_hashtags, clean_hashtags
 from app.services.json_enforcement import generate_valid_json
+from app.services.language_support import apply_language_policy, is_hindi
 from app.services.platform_rules import load_platform_rules, platform_rules_text
 from app.services.prompt_loader import load_prompt
 from app.services.schemas import load_schema
@@ -29,9 +30,11 @@ def generate_social(provider: LLMProvider, product: CampaignInput, audience: Aud
     }
     prompt, temperature, max_tokens = load_prompt("social_v1", values)
     system = prompt.split("[AUDIENCE INJECTION]", 1)[0].replace("[SYSTEM]", "", 1).strip()
+    system = apply_language_policy(system, product.language)
     user = "[AUDIENCE INJECTION]" + prompt.split("[AUDIENCE INJECTION]", 1)[1]
     combined: dict[str, Any] = {platform: None for platform in rules}
-    combined.update({"calendar": [], "prompt_version": "social_v1"})
+    prompt_version = "social_v1:language_policy_hi_v1" if is_hindi(product.language) else "social_v1"
+    combined.update({"calendar": [], "prompt_version": prompt_version})
 
     for platform in selected_platforms:
         platform_prompt = user + f"\nGenerate only the '{platform}' platform object for this call."

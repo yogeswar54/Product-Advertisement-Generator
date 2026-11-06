@@ -54,6 +54,7 @@ class CustomAudience(BaseModel):
 
 class AudienceProfileRequest(BaseModel):
     persona_id: str | None = None
+    language: str | None = None
     custom_audience: CustomAudience | None = None
     overrides: dict[str, object] = Field(default_factory=dict)
 

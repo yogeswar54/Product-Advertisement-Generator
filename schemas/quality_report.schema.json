@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "quality_report.schema.json",
+  "title": "Quality Report",
+  "type": "object",
+  "required": ["report_id", "campaign_reference", "rules_version", "prompt_versions", "timestamp", "overall_status", "overall_score", "module_scores", "findings"],
+  "properties": {
+    "report_id": {"type": "string"},
+    "campaign_reference": {"type": "string"},
+    "rules_version": {"type": "string"},
+    "prompt_versions": {"type": "array", "items": {"type": "string"}},
+    "timestamp": {"type": "string"},
+    "overall_status": {"enum": ["pass", "pass_with_warnings", "needs_review", "blocked"]},
+    "overall_score": {"type": "number", "minimum": 0, "maximum": 100},
+    "module_scores": {"type": "object", "additionalProperties": {"type": "number"}},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "check_applicability": {
+      "type": "object",
+      "additionalProperties": {"enum": ["English only", "language-aware", "skipped for this language"]}
+    },
+    "language_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

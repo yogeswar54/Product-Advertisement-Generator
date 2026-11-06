@@ -9,6 +9,7 @@ from app.models.stage6 import VisualOutput
 from app.models.stage7 import VideoOutput
 from app.providers.base import LLMProvider
 from app.services.json_enforcement import generate_valid_json
+from app.services.language_support import apply_language_policy
 from app.services.prompt_loader import load_prompt
 from app.services.schemas import load_schema
 from app.services.video_formats import load_video_formats, spoken_duration_seconds
@@ -28,6 +29,7 @@ def generate_video_scripts(provider: LLMProvider, product: CampaignInput, audien
     }
     prompt, temperature, max_tokens = load_prompt("video_script_v1", values)
     system = prompt.split("[AUDIENCE INJECTION]", 1)[0].replace("[SYSTEM]", "", 1).strip()
+    system = apply_language_policy(system, product.language)
     user = "[AUDIENCE INJECTION]" + prompt.split("[AUDIENCE INJECTION]", 1)[1]
     data, _, _ = generate_valid_json(provider, system, user, load_schema("video_output.schema.json"), temperature, max_tokens)
     return VideoOutput.model_validate(data)

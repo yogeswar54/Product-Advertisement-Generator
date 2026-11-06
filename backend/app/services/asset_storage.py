@@ -14,7 +14,7 @@ METADATA_PATH = ASSET_ROOT / "metadata.json"
 MAX_ASSET_BYTES = 15 * 1024 * 1024
 
 
-def save_asset(content: bytes, campaign_id: str, concept: str, format_name: str, prompt: str, provider: str, model: str, max_bytes: int = MAX_ASSET_BYTES) -> dict[str, object]:
+def save_asset(content: bytes, campaign_id: str, concept: str, format_name: str, prompt: str, provider: str, model: str, max_bytes: int = MAX_ASSET_BYTES, allowed_formats: set[str] | None = None, expected_format: str | None = None, preserve_alpha: bool = False, asset_role: str = "generated") -> dict[str, object]:
     ASSET_ROOT.mkdir(parents=True, exist_ok=True)
     if len(content) > max_bytes:
         raise ValueError("Generated image exceeds configured size limit")
@@ -22,18 +22,34 @@ def save_asset(content: bytes, campaign_id: str, concept: str, format_name: str,
         raise ValueError("Unsafe asset metadata component")
     try:
         source = Image.open(io.BytesIO(content))
+        source_format = source.format
+        if allowed_formats is not None and source_format not in allowed_formats:
+            raise ValueError("Image format is not supported")
+        if expected_format is not None and source_format != expected_format:
+            raise ValueError("Image content does not match its declared media type")
         source.verify()
+    except ValueError:
+        raise
     except Exception as exc:
         raise ValueError("Generated asset is not a valid image") from exc
-    source = Image.open(io.BytesIO(content)).convert("RGB")
+    source = Image.open(io.BytesIO(content))
+    has_alpha = preserve_alpha and ("A" in source.getbands() or "transparency" in source.info)
+    source = source.convert("RGBA" if has_alpha else "RGB")
     asset_id = uuid.uuid4().hex
     path = ASSET_ROOT / f"{asset_id}.png"
     source.save(path, format="PNG", optimize=True)
     metadata = load_metadata()
-    record = {"id":asset_id,"campaign_id":campaign_id,"concept":concept,"format":format_name,"prompt":prompt,"provider":provider,"model":model,"created_time":datetime.now(timezone.utc).isoformat(),"path":str(path)}
+    record = {"id":asset_id,"campaign_id":campaign_id,"concept":concept,"format":format_name,"prompt":prompt,"provider":provider,"model":model,"asset_role":asset_role,"created_time":datetime.now(timezone.utc).isoformat(),"path":str(path)}
     metadata.append(record)
     METADATA_PATH.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     return record
+
+
+def remove_asset_metadata(asset_id: str) -> None:
+    metadata = load_metadata()
+    retained = [record for record in metadata if record.get("id") != asset_id]
+    if len(retained) != len(metadata):
+        METADATA_PATH.write_text(json.dumps(retained, indent=2), encoding="utf-8")
 
 
 def load_metadata() -> list[dict[str, object]]:

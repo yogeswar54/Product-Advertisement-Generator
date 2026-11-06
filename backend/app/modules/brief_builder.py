@@ -5,6 +5,7 @@ from app.models.input import CampaignInput
 from app.models.stage4 import CampaignBrief
 from app.providers.base import LLMProvider
 from app.services.json_enforcement import generate_valid_json
+from app.services.language_support import apply_language_policy
 from app.services.prompt_loader import load_prompt
 from app.services.schemas import load_schema
 
@@ -33,6 +34,7 @@ def build_brief(provider: LLMProvider, product: CampaignInput, audience: Audienc
     prompt, temperature, max_tokens = load_prompt("brief_v1", values)
     sections = prompt.split("[SYSTEM]", 1)
     system = sections[1].split("[AUDIENCE INJECTION]", 1)[0].strip() if len(sections) > 1 else prompt
+    system = apply_language_policy(system, product.language)
     user = "[AUDIENCE INJECTION]" + prompt.split("[AUDIENCE INJECTION]", 1)[1] if "[AUDIENCE INJECTION]" in prompt else prompt
     data, _, _ = generate_valid_json(provider, system, user, load_schema("campaign_brief.schema.json"), temperature, max_tokens)
     return CampaignBrief.model_validate(data)

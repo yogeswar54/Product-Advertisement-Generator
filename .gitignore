@@ -9,6 +9,13 @@ __pycache__/
 venv/
 .pytest_cache/
 .coverage
+coverage.json
+htmlcov/
+storage/
+*.db
+*.log
+logs/
+build/
 # Node.js
 node_modules/
 dist/

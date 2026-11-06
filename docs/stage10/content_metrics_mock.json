@@ -1,0 +1,541 @@
+{
+  "provider_mode": "mock",
+  "target_basis": "Estimates are project test goals, not external benchmarks.",
+  "samples": {
+    "CampusFlow Bottle": {
+      "persona_count": 10,
+      "headline_uniqueness_percent": 10.0,
+      "persona_results": {
+        "college_students": {
+          "provider": "mock",
+          "duration_seconds": 0.018,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "young_professionals": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "working_parents": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "fitness_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "senior_citizens": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "small_business_owners": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "tech_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "luxury_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "budget_conscious_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "rural_first_time_online_buyers": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": true,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        }
+      }
+    },
+    "Northstar Desk Lamp": {
+      "persona_count": 10,
+      "headline_uniqueness_percent": 10.0,
+      "persona_results": {
+        "college_students": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "young_professionals": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "working_parents": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "fitness_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "senior_citizens": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "small_business_owners": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "tech_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "luxury_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "budget_conscious_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.016,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "rural_first_time_online_buyers": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        }
+      }
+    },
+    "TrailPack 25L": {
+      "persona_count": 10,
+      "headline_uniqueness_percent": 10.0,
+      "persona_results": {
+        "college_students": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "young_professionals": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "working_parents": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "fitness_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "senior_citizens": {
+          "provider": "mock",
+          "duration_seconds": 0.016,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "small_business_owners": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "tech_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "luxury_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "budget_conscious_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "rural_first_time_online_buyers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        }
+      }
+    },
+    "QuietBean Grinder": {
+      "persona_count": 10,
+      "headline_uniqueness_percent": 10.0,
+      "persona_results": {
+        "college_students": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "young_professionals": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "working_parents": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "fitness_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "senior_citizens": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "small_business_owners": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "tech_enthusiasts": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "luxury_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.015,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "budget_conscious_shoppers": {
+          "provider": "mock",
+          "duration_seconds": 0.016,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        },
+        "rural_first_time_online_buyers": {
+          "provider": "mock",
+          "duration_seconds": 0.014,
+          "social_posts_within_platform_limits": 5,
+          "social_posts_checked": 5,
+          "numbers_supported": false,
+          "schemas_valid_after_generation": true,
+          "headline_count": 5,
+          "quality_status": "pass"
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "product_count": 4,
+    "persona_count": 10,
+    "generation_runs": 40,
+    "social_length_compliance_percent": 100.0,
+    "description_length_ranges": "Not scored: no authoritative range values are configured.",
+    "headline_length_compliance": "Not scored: no headline limit is configured.",
+    "readability_by_persona": {
+      "college_students": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "young_professionals": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "working_parents": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "fitness_enthusiasts": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "senior_citizens": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "small_business_owners": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "tech_enthusiasts": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "luxury_shoppers": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "budget_conscious_shoppers": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      },
+      "rural_first_time_online_buyers": {
+        "mean": 30.94,
+        "range": [
+          30.94,
+          30.94
+        ],
+        "n": 4
+      }
+    },
+    "fact_fidelity_percent": 25.0,
+    "schema_valid_after_generation_percent": 100.0,
+    "schema_valid_first_attempt": "Not exposed by the current generation interface.",
+    "keyword_inclusion_percent": 100.0,
+    "forbidden_word_compliance_percent": 100.0,
+    "mean_persona_jaccard_similarity": 1.0,
+    "mean_generation_duration_seconds": 0.015,
+    "estimated_targets": {
+      "social_length_compliance_percent": {
+        "target": 100,
+        "reason": "Configured hard platform limits should be satisfied."
+      },
+      "fact_fidelity_percent": {
+        "target": 100,
+        "reason": "Unsupported numerical product claims are high risk."
+      },
+      "schema_valid_after_generation_percent": {
+        "target": 100,
+        "reason": "Outputs must conform to existing JSON contracts."
+      }
+    }
+  }
+}

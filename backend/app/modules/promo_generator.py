@@ -5,6 +5,7 @@ from app.models.input import CampaignInput
 from app.models.stage4 import CampaignBrief, PromoOutput
 from app.providers.base import LLMProvider
 from app.services.json_enforcement import generate_valid_json
+from app.services.language_support import apply_language_policy
 from app.services.prompt_loader import load_prompt
 from app.services.schemas import load_schema
 
@@ -27,6 +28,7 @@ def generate_promo(provider: LLMProvider, product: CampaignInput, audience: Audi
     }
     prompt, temperature, max_tokens = load_prompt("promo_v1", values)
     system = prompt.split("[AUDIENCE INJECTION]", 1)[0].replace("[SYSTEM]", "", 1).strip()
+    system = apply_language_policy(system, product.language)
     user = "[AUDIENCE INJECTION]" + prompt.split("[AUDIENCE INJECTION]", 1)[1]
     data, _, _ = generate_valid_json(provider, system, user, load_schema("promo_output.schema.json"), temperature, max_tokens)
     return PromoOutput.model_validate(data)

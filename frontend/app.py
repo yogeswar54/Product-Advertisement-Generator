@@ -1,18 +1,31 @@
 from __future__ import annotations
 
 import html
+from io import BytesIO
 import json
 import os
 
 import requests
 import streamlit as st
 from pathlib import Path
+from PIL import Image, ImageDraw, ImageFont
 
 API_BASE = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 PLATFORM_OPTIONS = ["instagram", "linkedin", "x", "facebook", "whatsapp"]
 PLATFORM_RULES = json.loads((Path(__file__).resolve().parents[1] / "config/platform_rules.json").read_text(encoding="utf-8"))
 VISUAL_FORMATS = json.loads((Path(__file__).resolve().parents[1] / "config/visual_formats.json").read_text(encoding="utf-8"))
 VOICE_OPTIONS = json.loads((Path(__file__).resolve().parents[1] / "config/voice_options.json").read_text(encoding="utf-8"))
+
+
+def feature_enabled(name: str) -> bool:
+    value = os.getenv(name, "off").strip().lower()
+    if value not in {"off", "on"}:
+        raise ValueError(f"{name} must be off or on")
+    return value == "on"
+
+
+ENHANCE_HINDI = feature_enabled("ENHANCE_HINDI")
+ENHANCE_BRAND_KIT = feature_enabled("ENHANCE_BRAND_KIT")
 
 st.set_page_config(page_title="Product Advertisement Generator", page_icon="P", layout="wide")
 st.title("AI-Based Product Advertisement Generator")
@@ -34,6 +47,18 @@ def api_get(path: str) -> tuple[bool, object]:
         return True, response.json()
     except requests.RequestException as exc:
         return False, str(exc)
+
+
+def render_brand_overlay(brand_kit: dict[str, object], logo_bytes: bytes | None) -> Image.Image:
+    preview = Image.new("RGBA", (960, 360), str(brand_kit["primary_color"]))
+    draw = ImageDraw.Draw(preview)
+    if logo_bytes:
+        with Image.open(BytesIO(logo_bytes)) as logo_file:
+            logo = logo_file.convert("RGBA")
+            logo.thumbnail((260, 210), Image.Resampling.LANCZOS)
+            preview.alpha_composite(logo, (660, 45))
+    draw.text((40, 260), "Aa", fill=str(brand_kit["secondary_color"]), font=ImageFont.load_default(size=48))
+    return preview.convert("RGB")
 
 
 if "validated_input" not in st.session_state:
@@ -96,7 +121,35 @@ with steps[2]:
     st.subheader("Campaign settings")
     campaign_goal = st.text_input("Campaign goal *", placeholder="Increase product-page conversions", key="campaign_goal")
     platforms = st.multiselect("Platforms *", PLATFORM_OPTIONS, key="platforms")
-    language = st.text_input("Language *", value="en-US", key="language")
+    if ENHANCE_HINDI:
+        language_choice = st.selectbox("Language *", ["English (en-US)", "Hindi (hi)", "Other"], key="language_choice")
+        if language_choice == "Hindi (hi)":
+            language = "hi"
+        elif language_choice == "English (en-US)":
+            language = "en-US"
+        else:
+            language = st.text_input("Language tag *", value="en-US", key="language_custom")
+    else:
+        language = st.text_input("Language *", value="en-US", key="language")
+    brand_kit = None
+    brand_logo_upload = None
+    if ENHANCE_BRAND_KIT:
+        st.subheader("Optional campaign brand kit")
+        if st.checkbox("Use a campaign brand kit", key="enable_brand_kit"):
+            brand_kit = {
+                "name": st.text_input("Brand kit name", max_chars=100, key="brand-kit-name"),
+                "primary_color": st.text_input("Primary color (hex)", value="#17324D", key="brand-kit-primary"),
+                "secondary_color": st.text_input("Secondary color (hex)", value="#FFFFFF", key="brand-kit-secondary"),
+                "font": st.text_input("Font category or name", max_chars=100, key="brand-kit-font"),
+                "font_licensing_note": st.text_input("Font licensing note", max_chars=300, key="brand-kit-font-license"),
+                "rights_confirmed": st.checkbox("I have the rights to use this logo and font.", key="brand-kit-rights"),
+            }
+            brand_logo_upload = st.file_uploader(
+                "Optional logo (PNG, JPEG, or WebP; SVG is not accepted)",
+                type=["png", "jpg", "jpeg", "webp"],
+                key="brand-kit-logo",
+            )
+            st.caption("Rights confirmation is user-provided; the application does not verify logo or font rights.")
 
 with steps[3]:
     st.subheader("Review")
@@ -112,15 +165,18 @@ with steps[3]:
             "target_audience": persona_names[selected_name] if persona_names[selected_name] != "__custom__" else "custom",
             "campaign_goal": st.session_state.campaign_goal,
             "platforms": st.session_state.platforms,
-            "language": st.session_state.language,
+            "language": language,
             "product_image": None,
             "competitor_info": st.session_state.competitor_info,
         }
+        if brand_kit is not None:
+            payload["brand_kit"] = brand_kit
         try:
             validation = requests.post(API_BASE + "/inputs/validate", json=payload, timeout=10)
             validation.raise_for_status()
             st.session_state.validated_input = validation.json()
             audience_request = {"persona_id": persona_names[selected_name]} if persona_names[selected_name] != "__custom__" else {"custom_audience": custom}
+            audience_request["language"] = language
             audience_request["overrides"] = overrides if "overrides" in locals() else {}
             profiling = requests.post(API_BASE + "/audiences/profile", json=audience_request, timeout=10)
             profiling.raise_for_status()
@@ -190,11 +246,57 @@ with steps[3]:
                         }, timeout=60)
                         response.raise_for_status()
                         st.session_state.generation = response.json()
+                        st.session_state.saved_campaign_id = None
                     except requests.RequestException as exc:
                         st.error("Generation failed: " + str(exc))
             if st.session_state.get("generation"):
                 generation = st.session_state.generation
-                result_tabs = st.tabs(["Descriptions", "Promo", "Social", "Visuals", "Video"])
+                if not st.session_state.get("saved_campaign_id"):
+                    section_names = {
+                        "description": "descriptions",
+                        "promo": "promo",
+                        "social": "social",
+                        "visual": "visuals",
+                        "video": "video",
+                    }
+                    saved_outputs = {}
+                    for module_name, section_name in section_names.items():
+                        module = generation.get("modules", {}).get(module_name, {})
+                        saved_outputs[section_name] = {
+                            "status": "ready" if module.get("status") == "success" else module.get("status", "missing"),
+                            "content": module.get("output", {}),
+                        }
+                    try:
+                        saved = requests.post(API_BASE + "/campaigns", json={
+                            "name": st.session_state.validated_input["validated"]["product_name"],
+                            "inputs": {
+                                **st.session_state.validated_input["validated"],
+                                "audience": st.session_state.audience_profile,
+                            },
+                            "brief": st.session_state.campaign_brief,
+                            "outputs": saved_outputs,
+                            "quality": generation.get("quality"),
+                        }, timeout=20)
+                        saved.raise_for_status()
+                        st.session_state.saved_campaign_id = saved.json()["id"]
+                    except requests.RequestException as exc:
+                        st.error("Generated content is available, but campaign history could not be saved: " + str(exc))
+                campaign_id = st.session_state.get("saved_campaign_id")
+                if campaign_id and brand_logo_upload is not None and st.session_state.get("brand_kit_logo_campaign_id") != campaign_id:
+                    try:
+                        uploaded = requests.put(
+                            API_BASE + f"/campaigns/{campaign_id}/brand-kit/logo",
+                            data=brand_logo_upload.getvalue(),
+                            headers={"Content-Type": brand_logo_upload.type or "application/octet-stream"},
+                            timeout=30,
+                        )
+                        uploaded.raise_for_status()
+                        st.session_state.brand_kit_logo_asset_id = uploaded.json()["id"]
+                        st.session_state.brand_kit_logo_campaign_id = campaign_id
+                        st.success("Brand logo validated and stored with this campaign.")
+                    except requests.RequestException as exc:
+                        st.error("Campaign was saved, but the brand logo could not be attached: " + str(exc))
+                result_tabs = st.tabs(["Descriptions", "Promo", "Social", "Visuals", "Video", "Quality"])
                 with result_tabs[0]:
                     description = generation["modules"]["description"]
                     if description["status"] == "success":
@@ -289,6 +391,19 @@ with steps[3]:
                 with result_tabs[3]:
                     visual = generation["modules"].get("visual", {})
                     if visual.get("status") == "success":
+                        saved_brand_kit = st.session_state.validated_input["validated"].get("brand_kit")
+                        if saved_brand_kit:
+                            logo_bytes = None
+                            logo_asset_id = st.session_state.get("brand_kit_logo_asset_id")
+                            if logo_asset_id:
+                                logo_response = requests.get(API_BASE + "/assets/" + logo_asset_id, timeout=15)
+                                logo_response.raise_for_status()
+                                logo_bytes = logo_response.content
+                            st.subheader("Brand kit overlay preview")
+                            st.image(render_brand_overlay(saved_brand_kit, logo_bytes), use_container_width=True)
+                            st.caption("Preview colors and logo only; text/background contrast is checked in the quality warnings.")
+                            if any(item.get("code") == "VISUAL_BRAND_LOW_CONTRAST" for item in generation.get("warnings", [])):
+                                st.warning("Brand color contrast is below the WCAG 4.5:1 text-overlay threshold.")
                         for index, concept in enumerate(visual["output"]["concepts"]):
                             with st.container(border=True):
                                 st.subheader(concept["name"])
@@ -391,6 +506,166 @@ with steps[3]:
                             video_content = requests.get(asset_url, timeout=20)
                             video_content.raise_for_status()
                             st.download_button("Download draft video", video_content.content, file_name=status["asset_id"] + ".mp4", mime="video/mp4", key="download-video")
+                with result_tabs[5]:
+                    quality = generation.get("quality")
+                    if quality is not None:
+                        status = quality["overall_status"]
+                        severity_icon = {"pass": "PASS", "pass_with_warnings": "WARNING", "needs_review": "MAJOR", "blocked": "BLOCKED"}
+                        st.subheader(f"{severity_icon[status]} - Quality score: {quality['overall_score']:.0f}/100")
+                        st.write("Automated checks reduce risk but do not provide legal or regulatory advice.")
+                        cols = st.columns(max(1, len(quality["module_scores"])))
+                        for column, (module, score) in zip(cols, quality["module_scores"].items()):
+                            column.metric(module.title(), f"{score:.0f}")
+                        if not quality["findings"]:
+                            st.success("No issues found.")
+                        for finding in quality["findings"]:
+                            icon = {"info": "INFO", "warning": "WARNING", "major": "MAJOR", "critical": "CRITICAL"}[finding["severity"]]
+                            with st.expander(f"{icon} - {finding['check_name']} - {finding['module']}"):
+                                st.write(finding["explanation"])
+                                st.code(finding["text"])
+                                st.caption("Suggested fix: " + finding["suggested_fix"])
+                                if finding["auto_fix_available"]:
+                                    if st.button("Apply auto-fix", key=f"quality-fix-{finding['id']}"):
+                                        response = requests.post(
+                                            API_BASE + "/campaigns/quality/autofix",
+                                            params={"campaign_reference": st.session_state.validated_input["validated"]["product_name"].lower()},
+                                            json={"finding_ids": [finding["id"]]},
+                                            timeout=30,
+                                        )
+                                        response.raise_for_status()
+                                        st.json(response.json()["diffs"])
+                        critical_or_major = any(f["status"] == "open" and f["severity"] in {"critical", "major"} for f in quality["findings"])
+                        if critical_or_major:
+                            st.button("Approve campaign", disabled=True, help="Fix or acknowledge critical and major findings before approval.")
+                        else:
+                            st.button("Approve campaign", disabled=False)
+                    elif generation.get("quality_error"):
+                        st.error(generation["quality_error"])
+                    else:
+                        st.info("No quality report is available. Run the quality check again.")
                 for warning in generation["warnings"]:
                     st.warning(warning["message"])
                 st.caption("Estimated tokens used: " + str(generation["estimated_tokens_used"]))
+
+st.divider()
+st.header("Campaign history and exports")
+try:
+    history_response = requests.get(API_BASE + "/campaigns", timeout=10)
+    history_response.raise_for_status()
+    campaign_rows = history_response.json()
+except requests.RequestException as exc:
+    campaign_rows = []
+    st.error("Campaign history is unavailable: " + str(exc))
+
+if not campaign_rows:
+    st.info("No campaigns saved yet.")
+else:
+    selected_campaign = st.selectbox(
+        "Open a saved campaign",
+        campaign_rows,
+        format_func=lambda item: f"{item['name']} — {item['status']}",
+        key="history_campaign",
+    )
+    selected_id = selected_campaign["id"]
+    action_columns = st.columns(3)
+    if action_columns[0].button("Duplicate campaign", key="history-duplicate"):
+        response = requests.post(API_BASE + f"/campaigns/{selected_id}/duplicate", timeout=10)
+        if response.ok:
+            st.success("Campaign duplicated as a draft.")
+            st.rerun()
+        else:
+            st.error(response.text)
+    if action_columns[1].button("Delete campaign", key="history-delete"):
+        st.session_state.confirm_campaign_delete = selected_id
+    if st.session_state.get("confirm_campaign_delete") == selected_id:
+        st.warning("Delete this campaign and its saved exports?")
+        if st.button("Confirm delete", key="history-confirm-delete"):
+            response = requests.delete(API_BASE + f"/campaigns/{selected_id}", params={"confirm": "true"}, timeout=10)
+            if response.ok:
+                st.session_state.confirm_campaign_delete = None
+                st.rerun()
+            else:
+                st.error(response.text)
+    try:
+        package_response = requests.get(API_BASE + f"/campaigns/{selected_id}/package", timeout=10)
+        package_response.raise_for_status()
+        package = package_response.json()
+        st.caption("Approval status: " + str(package["approval"]["status"]))
+        st.write("Latest package summary")
+        st.json({key: package[key] for key in ("quality_summary", "approval", "descriptions", "promo", "social", "visuals", "video")})
+        st.subheader("Edit or revert a section")
+        section_name = st.selectbox("Section", ["descriptions", "promo", "social", "visuals", "video"], key="history-section")
+        section_data = package[section_name]["content"]
+        edited_json = st.text_area("Section JSON", value=json.dumps(section_data, ensure_ascii=False, indent=2), height=220)
+        edit_columns = st.columns(2)
+        if edit_columns[0].button("Save section edit", key="history-save-section"):
+            try:
+                edited_value = json.loads(edited_json)
+                response = requests.patch(
+                    API_BASE + f"/campaigns/{selected_id}/sections/{section_name}",
+                    json={"value": edited_value, "source": "manual_edit"},
+                    timeout=15,
+                )
+                if response.ok:
+                    st.success("Edit saved. Approval now needs review.")
+                    st.rerun()
+                else:
+                    st.error(response.json().get("error", {}).get("message", response.text))
+            except json.JSONDecodeError:
+                st.error("Section JSON is invalid.")
+        if edit_columns[1].button("Revert previous edit", key="history-revert-section"):
+            response = requests.post(API_BASE + f"/campaigns/{selected_id}/sections/{section_name}/revert", timeout=10)
+            if response.ok:
+                st.success("Previous section value restored.")
+                st.rerun()
+            else:
+                st.error(response.json().get("error", {}).get("message", response.text))
+        if st.button("Run quality check on saved campaign", key="history-quality"):
+            response = requests.post(API_BASE + f"/campaigns/{selected_id}/quality", timeout=20)
+            if response.ok:
+                st.session_state.history_quality = response.json()
+                st.success("Quality report saved.")
+            else:
+                st.error(response.text)
+        quality_data = st.session_state.get("history_quality")
+        if quality_data and quality_data.get("campaign_reference") == selected_id:
+            st.write("Quality status: " + quality_data["overall_status"])
+            approver = st.text_input("Approved by", key="history-approver")
+            if st.button("Approve current report", key="history-approve"):
+                response = requests.post(
+                    API_BASE + f"/campaigns/{selected_id}/approve",
+                    params={"approved_by": approver or "user", "report_id": quality_data["report_id"]},
+                    timeout=10,
+                )
+                if response.ok:
+                    st.success("Campaign approved.")
+                    st.rerun()
+                else:
+                    st.error(response.json().get("error", {}).get("message", response.text))
+        export_format = st.selectbox("Export format", ["json", "docx", "pdf", "zip"], key="history-export-format")
+        if st.button("Create export", key="history-export"):
+            response = requests.post(
+                API_BASE + f"/campaigns/{selected_id}/exports",
+                json={"format": export_format},
+                timeout=60,
+            )
+            if response.ok:
+                export_id = response.json()["export_id"]
+                download = requests.get(API_BASE + f"/exports/{export_id}", timeout=30)
+                if download.ok:
+                    st.download_button(
+                        "Download export",
+                        data=download.content,
+                        file_name=f"{selected_campaign['name']}.{export_format}",
+                        key=f"history-download-{export_id}",
+                    )
+                else:
+                    st.error("Export was created, but download failed: " + download.text)
+            else:
+                st.error(response.json().get("error", {}).get("message", response.text))
+        exports_response = requests.get(API_BASE + f"/campaigns/{selected_id}/exports", timeout=10)
+        if exports_response.ok and exports_response.json():
+            st.subheader("Export history")
+            st.json(exports_response.json())
+    except requests.RequestException as exc:
+        st.error("Could not open this campaign: " + str(exc))

@@ -12,7 +12,7 @@ def run_lightweight_checks(product: CampaignInput, description: DescriptionOutpu
     if description:
         texts.extend([description.short, description.medium, description.long])
     if promo:
-        texts.extend(promo.headlines + promo.taglines + [item.copy for item in promo.ad_copy_variants] + [item.copy for item in promo.ab_variants])
+        texts.extend(promo.headlines + promo.taglines + [item.text for item in promo.ad_copy_variants] + [item.text for item in promo.ab_variants])
     supplied_numbers = set(re.findall(r"(?<!\w)\d+(?:\.\d+)?(?:%)?(?!\w)", product_facts_text(product)))
     combined = " ".join(texts)
     for number in re.findall(r"(?<!\w)\d+(?:\.\d+)?(?:%)?(?!\w)", combined):

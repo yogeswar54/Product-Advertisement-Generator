@@ -28,14 +28,16 @@ class DescriptionOutput(BaseModel):
 
 
 class AdCopyVariant(BaseModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
     style: Literal["banner", "email", "search-ad"]
-    copy: str
+    text: str = Field(alias="copy")
 
 
 class ABVariant(BaseModel):
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
     angle: Literal["urgency", "trust", "fun"]
     id: Literal["A", "B", "C"]
-    copy: str
+    text: str = Field(alias="copy")
 
 
 class PromoOutput(BaseModel):

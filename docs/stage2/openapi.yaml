@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: AI-Based Product Advertisement Generator - Stage 3
-  version: 0.3.0
+  title: AI-Based Product Advertisement Generator - Stage 11
+  version: 0.4.0
 paths:
   /health:
     get:
@@ -38,6 +38,17 @@ paths:
   /audiences/profile:
     post:
       operationId: profileAudience
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                persona_id: {type: string}
+                language: {type: string, description: "Hindi language guidance requires ENHANCE_HINDI=on."}
+                custom_audience: {type: object}
+                overrides: {type: object}
       responses:
         '200': {description: Audience profile}
         '404': {description: Persona not found}
@@ -157,3 +168,289 @@ paths:
           schema: {type: string}
       responses:
         '200': {description: Campaign asset metadata}
+  /campaigns:
+    get:
+      operationId: listCampaignHistory
+      parameters:
+        - in: query
+          name: sort
+          schema: {type: string, enum: [updated, created], default: updated}
+        - in: query
+          name: search
+          schema: {type: string}
+      responses:
+        '200': {description: Campaign history list}
+    post:
+      operationId: saveCampaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {type: object, required: [name, inputs], properties: {name: {type: string}, inputs: {type: object}, brief: {type: object}, outputs: {type: object}, quality: {type: object}}}
+      responses:
+        '200': {description: Saved campaign}
+        '422': {description: Invalid campaign data}
+  /campaigns/{campaign_id}:
+    get:
+      operationId: openCampaign
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Assembled campaign package}
+        '404': {description: Campaign not found}
+    delete:
+      operationId: deleteCampaign
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: query
+          name: confirm
+          required: false
+          schema: {type: boolean, default: false}
+      responses:
+        '200': {description: Campaign deleted}
+        '409': {description: Confirmation required}
+  /campaigns/{campaign_id}/duplicate:
+    post:
+      operationId: duplicateCampaign
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Duplicated draft campaign}
+        '404': {description: Campaign not found}
+  /campaigns/{campaign_id}/package:
+    get:
+      operationId: getCampaignPackage
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Campaign package JSON}
+        '404': {description: Campaign not found}
+  /campaigns/{campaign_id}/brand-kit/logo:
+    put:
+      operationId: uploadCampaignBrandKitLogo
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          image/png: {schema: {type: string, format: binary}}
+          image/jpeg: {schema: {type: string, format: binary}}
+          image/webp: {schema: {type: string, format: binary}}
+      responses:
+        '200': {description: Logo validated, re-encoded, stored under campaign assets, and linked to its brand kit}
+        '404': {description: Feature disabled or campaign not found}
+        '409': {description: Campaign brand kit or rights confirmation is missing}
+        '415': {description: Unsupported image type; SVG is not accepted}
+        '422': {description: Invalid logo bytes or image size}
+  /campaigns/{campaign_id}/sections/{section}:
+    patch:
+      operationId: editCampaignSection
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: path
+          name: section
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {type: object, required: [value], properties: {value: {}, editor: {type: string, default: user}, source: {type: string, enum: [generated, manual_edit, autofix, regenerated]}}}
+      responses:
+        '200': {description: Updated section; campaign requires review}
+        '404': {description: Section not found}
+        '422': {description: Section validation error}
+  /campaigns/{campaign_id}/sections/{section}/versions:
+    get:
+      operationId: listSectionVersions
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: path
+          name: section
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Reversible section versions}
+  /campaigns/{campaign_id}/sections/{section}/revert:
+    post:
+      operationId: revertCampaignSection
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: path
+          name: section
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Previous section value restored}
+        '409': {description: No previous version}
+  /campaigns/{campaign_id}/quality:
+    get:
+      operationId: getCampaignQualityReport
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Latest campaign quality report}
+        '404': {description: Campaign not found}
+    post:
+      operationId: checkSavedCampaignQuality
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Stored campaign quality report}
+        '404': {description: Campaign not found}
+  /campaigns/{campaign_id}/approve:
+    post:
+      operationId: approveSavedCampaign
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: query
+          name: approved_by
+          required: true
+          schema: {type: string}
+        - in: query
+          name: report_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Campaign approved}
+        '409': {description: Findings open or report outdated}
+  /campaigns/quality/check:
+    post:
+      operationId: checkCampaignQuality
+      responses:
+        '200': {description: Quality report for the submitted campaign}
+        '422': {description: Invalid campaign data}
+  /campaigns/quality/autofix:
+    post:
+      operationId: autofixCampaignQuality
+      responses:
+        '200': {description: Campaign with eligible findings autofixed}
+  /campaigns/quality/findings/{finding_id}/acknowledge:
+    post:
+      operationId: acknowledgeQualityFinding
+      parameters:
+        - in: path
+          name: finding_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Finding acknowledgement recorded}
+        '404': {description: Finding not found}
+  /campaigns/quality/findings/{finding_id}/regenerate:
+    post:
+      operationId: regenerateQualityFinding
+      parameters:
+        - in: path
+          name: finding_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Content regenerated for the finding}
+        '404': {description: Finding not found}
+  /campaigns/approve:
+    post:
+      operationId: approveCampaign
+      responses:
+        '200': {description: Campaign approval recorded}
+        '409': {description: Open critical or major findings}
+  /campaigns/approval/revoke:
+    post:
+      operationId: revokeCampaignApproval
+      responses:
+        '200': {description: Campaign approval revoked}
+  /config/quality-rules:
+    get:
+      operationId: getQualityRules
+      responses:
+        '200': {description: Active quality rules}
+  /campaigns/{campaign_id}/exports:
+    get:
+      operationId: listCampaignExports
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Export history}
+    post:
+      operationId: createCampaignExport
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {type: object, required: [format], properties: {format: {type: string, enum: [json, docx, pdf, zip]}}}
+      responses:
+        '200': {description: Export recorded}
+        '409': {description: Approval or report conflict}
+  /campaigns/{campaign_id}/exports/{export_id}/download:
+    get:
+      operationId: downloadCampaignExportByCampaign
+      parameters:
+        - in: path
+          name: campaign_id
+          required: true
+          schema: {type: string}
+        - in: path
+          name: export_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Campaign export file}
+        '404': {description: Export not found}
+        '409': {description: Stored export integrity failure}
+  /exports/{export_id}:
+    get:
+      operationId: downloadCampaignExport
+      parameters:
+        - in: path
+          name: export_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Export file}
+        '404': {description: Export not found}
+        '409': {description: Stored export integrity failure}
+  /config/export-settings:
+    get:
+      operationId: getExportSettings
+      responses:
+        '200': {description: Read-only export configuration}

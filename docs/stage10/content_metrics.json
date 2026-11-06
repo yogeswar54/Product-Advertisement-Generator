@@ -1,0 +1,26 @@
+{
+  "CampusFlow Bottle": {
+    "readability_mean": 54.72500000000002,
+    "fact_fidelity": 100.0,
+    "schema_valid_mock": 100.0,
+    "sample_output": true
+  },
+  "Northstar Desk Lamp": {
+    "readability_mean": 75.87500000000001,
+    "fact_fidelity": 100.0,
+    "schema_valid_mock": 100.0,
+    "sample_output": true
+  },
+  "TrailPack 25L": {
+    "readability_mean": -18.19999999999996,
+    "fact_fidelity": 100.0,
+    "schema_valid_mock": 100.0,
+    "sample_output": true
+  },
+  "QuietBean Grinder": {
+    "readability_mean": 87.94500000000001,
+    "fact_fidelity": 100.0,
+    "schema_valid_mock": 100.0,
+    "sample_output": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "page_size": "A4",
+  "fonts": {
+    "regular": "",
+    "bold": ""
+  },
+  "image_max_width": 1200,
+  "max_exports_per_campaign": 20,
+  "retention_days": 30,
+  "version_limit": 5,
+  "max_export_bytes": 52428800,
+  "disclosure_text": "AI-generated draft. Automated checks reduce risk but do not guarantee legal or regulatory compliance. Human review is required before publishing.",
+  "export_requires_approval": true
+}

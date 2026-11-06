@@ -20,6 +20,15 @@ def profile_audience(request: AudienceProfileRequest) -> AudienceProfile:
         if unknown:
             raise ValueError("Unsupported audience profile overrides: " + ", ".join(sorted(unknown)))
         profile = AudienceProfile.model_validate({**profile.model_dump(by_alias=True), **request.overrides})
+    if request.language and request.language.strip().lower().split("-", maxsplit=1)[0] == "hi":
+        from app.services.feature_flags import enhancement_enabled
+
+        if not enhancement_enabled("ENHANCE_HINDI"):
+            raise ValueError("Hindi audience guidance requires ENHANCE_HINDI=on")
+        profile.vocabulary_level += (
+            "; हिंदी आउटपुट के लिए देवनागरी में स्पष्ट, स्वाभाविक भाषा रखें; "
+            "भाषा या क्षेत्र से दर्शक की पहचान का अनुमान न लगाएँ"
+        )
     return profile
 
 
